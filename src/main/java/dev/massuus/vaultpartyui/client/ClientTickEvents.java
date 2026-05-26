@@ -52,5 +52,13 @@ public final class ClientTickEvents {
                 }
             }
         }
+
+        if(!minecraft.isLocalServer()) {
+            assert minecraft.getCurrentServer() != null;
+            var serverData = minecraft.getCurrentServer();
+            if (serverData.name != ClientRestorePrevParty.loadedWorld) {
+                ClientRestorePrevParty.loadConfigForWorld(serverData.name);
+            }
+        }
     }
 }
