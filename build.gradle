@@ -52,29 +52,30 @@ minecraft {
     }
 }
 
-def vaultHuntersJar = file(providers.gradleProperty('vault_hunters_jar').orElse('C:/Users/samva/curseforge/minecraft/Instances/Vault Hunters Third Edition - Remastered/mods/the_vault-1.18.2-3.21.5-remastered.6574.jar').get())
-def vaultHuntersGroup = 'dev.massuus.vault'
-def vaultHuntersArtifact = 'the_vault'
-def vaultHuntersVersion = '1.18.2-3.21.5-remastered.6574'
-def vaultHuntersRepo = file("$rootDir/local-maven")
+def vaultHuntersProjectId = "458203"
+def vaultHuntersFileId = "7967092"
 
-if (!vaultHuntersJar.exists()) {
-    throw new GradleException("Vault Hunters jar not found at ${vaultHuntersJar}. Set -Pvault_hunters_jar to the mod jar path.")
-}
+//  https://cursemaven.com/test/458203/7967092
 
 repositories {
     maven {
         url = 'https://maven.minecraftforge.net'
     }
-    maven {
-        url = uri(vaultHuntersRepo)
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
     }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly fg.deobf("${vaultHuntersGroup}:${vaultHuntersArtifact}:${vaultHuntersVersion}")
-    runtimeOnly fg.deobf("${vaultHuntersGroup}:${vaultHuntersArtifact}:${vaultHuntersVersion}")
+    implementation fg.deobf("curse.maven:the-vault-${vaultHuntersProjectId}:${vaultHuntersFileId}")
 }
 
 tasks.withType(JavaCompile).configureEach {
